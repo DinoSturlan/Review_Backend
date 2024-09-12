@@ -1,14 +1,18 @@
-import express from 'express'
+const express = require('express');
+const connectDB = require('./config/db');
+const authRoutes = require('./routes/authRoutes');
+const cors = require('cors');
 
-const app = express()
-const port = 3000
 
-app.get('/', (req, res) => {
-    res.send("Hello")
-    console.log("Hello konzola")
+const app = express();
+app.use(express.json());
 
-}
-)
 
-app.listen(port, () => console.log(`Slusam na port ${port}!`))
+app.use(cors());
 
+connectDB();
+
+app.use('/api/auth', authRoutes);
+
+const PORT = process.env.PORT || 3000;
+app.listen(3000, () => console.log('Server running on http://localhost:3000'));

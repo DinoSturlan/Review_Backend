@@ -7,9 +7,13 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "core-js": "^3.8.3",
+    "cors": "^2.8.5",
     "express": "^4.20.0",
+    "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.8.1",
+    "mongoose": "^8.6.2",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3"
   },
