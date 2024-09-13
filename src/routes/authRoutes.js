@@ -19,16 +19,14 @@ router.post('/signup', async (req, res) => {
       return res.status(400).json({ message: 'Username already exists' });
     }
 
- 
     const hashedPassword = await bcrypt.hash(password, 10);
-
-
-    const newUser = new User({ username, password: hashedPassword });
+    const newUser = new User({ username, password: hashedPassword, date: new Date() });
     await newUser.save();
 
     res.status(201).json({ message: 'User created successfully' });
   } catch (error) {
-    res.status(500).json({ error: 'Server error' });
+    console.error('Error during signup:', error);
+    res.status(500).json({ error: 'Server error', details: error.message });
   }
 });
 
@@ -53,9 +51,9 @@ router.post('/login', async (req, res) => {
     }
 
 
-    const token = jwt.sign({ userId: user._id, username: user.username }, 'your_jwt_secret', { expiresIn: '1h' });
+    const token = jwt.sign({ userId: user._id, username: user.username, date: user.date }, 'your_jwt_secret', { expiresIn: '1h' });
 
-    res.json({ token, user: { username: user.username, dateJoined: user.date } });
+    res.json({ token, user: { username: user.username, date: user.date } });
     
   } catch (error) {
     res.status(500).json({ error: 'Server error' });
@@ -63,5 +61,7 @@ router.post('/login', async (req, res) => {
 });
 
 module.exports = router;
+
+
 
 
