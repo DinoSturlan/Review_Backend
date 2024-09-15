@@ -32,9 +32,6 @@ router.post('/signup', async (req, res) => {
 
 
 
-
-
-
 router.post('/login', async (req, res) => {
   const { username, password } = req.body;
 
@@ -51,7 +48,7 @@ router.post('/login', async (req, res) => {
     }
 
 
-    const token = jwt.sign({ userId: user._id, username: user.username, date: user.date }, 'your_jwt_secret', { expiresIn: '1h' });
+    const token = jwt.sign({ userId: user._id, username: user.username, date: user.date }, 'your_jwt_secret', { expiresIn: '24h' });
 
     res.json({ token, user: { username: user.username, date: user.date } });
     
@@ -59,6 +56,8 @@ router.post('/login', async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 });
+
+
 
 module.exports = router;
 

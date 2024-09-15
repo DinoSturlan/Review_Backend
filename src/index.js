@@ -14,5 +14,10 @@ connectDB();
 
 app.use('/api/auth', authRoutes);
 
+const postRoutes = require('./routes/postRoutes');
+app.use('/api/posts', postRoutes);
+
 const PORT = process.env.PORT || 3000;
 app.listen(3000, () => console.log('Server running on http://localhost:3000'));
+
+
