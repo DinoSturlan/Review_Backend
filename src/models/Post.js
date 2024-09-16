@@ -11,7 +11,9 @@ const postSchema = new mongoose.Schema({
       {
         username: String,
         comment: String,
-        date: { type: Date, default: Date.now }
+        date: { type: Date, default: Date.now },
+        likes: { type: Number, default: 0 },
+        likedBy: [{ type: String }]
       }
     ]
   });
@@ -19,4 +21,3 @@ const postSchema = new mongoose.Schema({
   const Post = mongoose.model('Post', postSchema);
   module.exports = Post;
 
-  

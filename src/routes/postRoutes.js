@@ -73,5 +73,60 @@ router.post('/create', authMiddleware, async (req, res) => {
   });
 
 
+  router.post('/:postId/comment/:commentId/like', authMiddleware, async (req, res) => {
+    try {
+      const post = await Post.findById(req.params.postId);
+      if (!post) {
+        return res.status(404).json({ message: 'Post not found' });
+      }
+  
+      const comment = post.comments.id(req.params.commentId);
+
+      if (!comment) {
+        return res.status(404).json({ message: 'Comment not found' });
+      }
+  
+
+      if (comment.likedBy.includes(req.user.username)) {
+        return res.status(400).json({ message: 'You have already liked this comment' });
+      }
+  
+
+      comment.likes += 1;
+      comment.likedBy.push(req.user.username);
+  
+      await post.save();
+
+      res.status(200).json({ message: 'Comment liked successfully', likes: comment.likes });
+    } catch (error) {
+      res.status(500).json({ error: 'Error liking comment' });
+    }
+  });
+  
+
+  router.delete('/:postId', authMiddleware, async (req, res) => {
+    try {
+
+      const post = await Post.findById(req.params.postId);
+  
+      if (!post) {
+        return res.status(404).json({ message: 'Post not found' });
+      }
+  
+
+      if (post.username !== req.user.username) {
+        return res.status(403).json({ message: 'You do not have permission to delete this post' });
+      }
+  
+      await Post.findByIdAndDelete(req.params.postId);
+  
+      res.status(200).json({ message: 'Post deleted successfully' });
+    } catch (error) {
+      console.error('Error deleting post:', error);
+      res.status(500).json({ error: 'Error deleting post' });
+    }
+  });
+
+
   module.exports = router;
 
