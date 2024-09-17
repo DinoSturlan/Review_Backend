@@ -7,7 +7,7 @@ const Post = require('../models/Post');
 router.post('/create', authMiddleware, async (req, res) => {
 
     try {
-      const { description, image, type } = req.body;
+      const { description, image, type, category } = req.body;
   
       const newPost = new Post({
         username: req.user.username,
@@ -15,6 +15,7 @@ router.post('/create', authMiddleware, async (req, res) => {
         image,
         type,
         date: new Date(),
+        category,
       });
   
       await newPost.save();
@@ -31,7 +32,22 @@ router.post('/create', authMiddleware, async (req, res) => {
 
   router.get('/', async (req, res) => {
     try {
-      const posts = await Post.find().sort({ date: -1 });
+      let categories = req.query.categories;
+  
+      if (Array.isArray(categories)) {
+      } else if (categories && typeof categories === 'string') {
+
+        categories = categories.split(',');
+      } else {
+        categories = [];
+      }
+  
+      let query = {};
+      if (categories.length && categories[0] !== 'all') {
+        query = { category: { $in: categories } };
+      }
+  
+      const posts = await Post.find(query).sort({ date: -1 });
       res.json(posts);
     } catch (error) {
       res.status(500).json({ error: 'Error fetching posts' });
@@ -39,7 +55,6 @@ router.post('/create', authMiddleware, async (req, res) => {
   });
   
   
-
 
   router.post('/:postId/comment', authMiddleware, async (req, res) => {
     try {

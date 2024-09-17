@@ -6,7 +6,7 @@ const postSchema = new mongoose.Schema({
     image: { type: String },
     type: { type: String, enum: ['review', 'request'], required: true },
     date: { type: Date, default: Date.now },
-
+    category: { type: String, required: true },
     comments: [
       {
         username: String,
